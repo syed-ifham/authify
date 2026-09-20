@@ -148,8 +148,8 @@ The goal is to understand authentication, authorization, JWTs, email verificatio
 Clone the repository:
 
 ```bash
-git clone <your-repository-url>
-cd auth-system
+git clone https://github.com/syed-ifham/authify.git
+cd authify
 ```
 
 Then configure the environment variables for the frontend and both backend implementations.
