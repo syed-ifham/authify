@@ -28,7 +28,7 @@ public class ProfileServiceImp implements ProfileService {
         UserEntity existingUser = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
         //already verified
-        if (existingUser.getIsAccountVerified()) return;
+//        if (existingUser.getIsAccountVerified()) return;
 
         String otp = String.valueOf(ThreadLocalRandom.current().nextInt(10_00_00, 10_00_000));
 

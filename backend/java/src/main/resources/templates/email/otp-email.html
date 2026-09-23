@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Template</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f3f4f6; font-family: Arial, sans-serif;">
+<!-- Outer Centering Table -->
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #f3f4f6; padding: 20px 0;">
+    <tr>
+        <td align="center">
+            <!-- Inner Content Container Card -->
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" style="width: 100%; max-width: 600px; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+
+                <!-- Header Banner Image -->
+                <tr>
+                    <td align="center" style="padding: 0;">
+                        <img src="https://via.placeholder.com/600x150/4f46e5/ffffff?text=Welcome+To+Our+Platform"
+                             alt="Header Banner"
+                             width="600"
+                             style="width: 100%; max-width: 600px; height: auto; display: block; border: 0;" />
+                    </td>
+                </tr>
+
+                <!-- Body Content -->
+                <tr>
+                    <td style="padding: 32px 24px;">
+                        <h1 style="margin: 0 0 16px 0; font-size: 24px; font-weight: bold; color: #111827;">
+                            Verify Your Account
+                        </h1>
+                        <p style="margin: 0 0 24px 0; font-size: 16px; line-height: 24px; color: #4b5563;">
+                            Thanks for signing up! Please use the verification code below to confirm your account setup:
+                        </p>
+
+                        <!-- OTP Box -->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto 24px auto;">
+                            <tr>
+                                <td align="center" style="background-color: #e0e7ff; border: 2px dashed #6366f1; border-radius: 6px; padding: 12px 24px;">
+                                        <span style="font-size: 28px; font-weight: bold; letter-spacing: 6px; color: #4338ca; font-family: monospace;" th:text="${otp}">
+                                            948201
+                                        </span>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Call To Action Button -->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+                            <tr>
+                                <td align="center" style="border-radius: 6px; background-color: #4f46e5;">
+                                    <a href="https://yourdomain.com/verify" target="_blank" style="font-size: 16px; font-family: Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 6px; padding: 12px 24px; display: inline-block; font-weight: bold;">
+                                        Confirm Account
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                    <td style="background-color: #f9fafb; padding: 16px 24px; text-align: center; border-top: 1px solid #e5e7eb;">
+                        <p style="margin: 0; font-size: 12px; color: #9ca3af;">
+                            &copy; 2026 Company Name. All rights reserved.
+                        </p>
+                    </td>
+                </tr>
+
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
