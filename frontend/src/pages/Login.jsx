@@ -1,34 +1,56 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Button from "../components/Button.jsx";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import axios from "axios";
+import {AppContext} from "../context/AppContext.jsx";
+import {toast} from "react-toastify";
 
 export default function Login() {
 
-  const [isCreatedAccount, setIsCreatedAccount] = useState(true);
+  const [isCreatedAccount, setIsCreatedAccount] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const {backendURL, setIsLoggedIn, getUserData} = useContext(AppContext);
+  const navigate = useNavigate();
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
     axios.defaults.withCredentials = true;
+
     setLoading(true);
 
     try {
       if (isCreatedAccount) {
-        //register API
+        const response = await axios.post(`${backendURL}/register`, {name, email, password});
+        if (response.status === 200 || response.status === 201 || response.data?.success) {
+          setIsLoggedIn?.(true);
+          await getUserData?.();
+          navigate("/");
+          toast.success(response.data?.message || "Account created successfully.");
+        } else {
+          toast.error(response.data?.message || "Registration failed");
+        }
       } else {
         //login api
+        const response = await axios.post(`${backendURL}/login`, {email, password});
+        if (response.status === 200 || response.status === 201 || response.data?.success) {
+          setIsLoggedIn?.(true);
+          await getUserData?.();
+          navigate("/");
+          toast.success(response.data?.message || "Welcome back!");
+        } else {
+          toast.error(response.data?.message || "Invalid credentials");
+        }
       }
-    }catch (error){
-
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message || "An error occurred");
+    } finally {
+      setLoading(false);
     }
-
-  }
-
+  };
 
   return (
     <div className="relative flex flex-col justify-center items-center min-h-screen bg-indigo-600">
@@ -50,7 +72,7 @@ export default function Login() {
             {isCreatedAccount ? "Create account" : "Welcome back"}
           </h2>
           <p className="text-slate-500 text-sm mt-1">
-            Please enter your details to sign in
+            {isCreatedAccount ? "Please enter your details to sign up" : "Please enter your details to sign in"}
           </p>
         </div>
 
@@ -66,7 +88,7 @@ export default function Login() {
                   <input type="text"
                          id="fullName"
                          className="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/20 transition"
-                         placeholder="Enter your email" required
+                         placeholder="Enter your name" required
                          onChange={(e) => setName(e.target.value)}
                          value={name}
                   />
@@ -104,7 +126,7 @@ export default function Login() {
           {
             !isCreatedAccount && (
               <div className="text-right">
-                <Link to="\reset-password"
+                <Link to="/reset-password"
                       className="text-sm underline font-semibold text-indigo-600 hover:text-indigo-700 transition">
                   Forget password?
                 </Link>
@@ -112,26 +134,28 @@ export default function Login() {
             )
           }
 
-          <Button type="submit" variant="default" size="lg" className="w-full mt-2">
-            {isCreatedAccount ? "Create account" : "Login"}
+          <Button
+            type="submit" variant="default" size="lg" className="w-full mt-2"
+            disabled={loading}
+          >
+            {loading ? "Loading...." : isCreatedAccount ? "Create account" : "Login"}
           </Button>
 
           {/* Toggle between Login and Signup */}
           <div className="text-center text-sm text-slate-600 mt-2">
-            {isCreatedAccount ? "Already have an account?" : "Dont't have an account"}{" "}
+            {isCreatedAccount ? "Already have an account?" : "Don't have an account?"}{" "}
             <button
+              type="button"
               onClick={() => setIsCreatedAccount(!isCreatedAccount)}
               className="font-semibold underline text-indigo-600 hover:text-indigo-700 transition cursor-pointer">
               {isCreatedAccount ? "Sign in" : "Sign up"}
             </button>
           </div>
 
-
         </form>
 
       </div>
 
-
     </div>
-  )
+  );
 }

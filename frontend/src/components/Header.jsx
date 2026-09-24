@@ -1,7 +1,12 @@
 import Button from "./Button.jsx";
 import {ArrowRight} from "lucide-react";
+import {useContext} from "react";
+import {AppContext} from "../context/AppContext.jsx";
 
 export default function Header() {
+
+  const {userData} = useContext(AppContext);
+
   return (
     <section
       className="text-center flex flex-col items-center justify-center max-w-2xl mx-auto py-12 px-4">
@@ -12,7 +17,7 @@ export default function Header() {
       />
 
       <p className="font-semibold text-slate-600 mb-2 flex items-center gap-1 text-lg">
-        Hey Developer, <span role="img" aria-label="wave">👋</span>
+        Hey {userData ? userData.name : "Developer"}, <span role="img" aria-label="wave">👋</span>
       </p>
 
       <h1 className="font-bold font-jakarta text-slate-900 tracking-tight  text-4xl mb-4 leading-tight">
