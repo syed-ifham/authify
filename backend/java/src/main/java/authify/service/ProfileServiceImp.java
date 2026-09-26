@@ -112,8 +112,7 @@ public class ProfileServiceImp implements ProfileService {
         String otp = String.valueOf(ThreadLocalRandom.current().nextInt(10_00_00, 10_00_000));
 
         //calculate expiry time (current time + 15 minutes in milliseconds)
-//        long expiryTime = System.currentTimeMillis() + (15 * 60 * 1_000);
-        long expiryTime = System.currentTimeMillis() + (1_000);
+        long expiryTime = System.currentTimeMillis() + (15 * 60 * 1_000);
 
         //update the profile/user
         existingEntity.setResetOtp(otp);

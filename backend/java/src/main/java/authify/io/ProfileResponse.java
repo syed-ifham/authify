@@ -1,5 +1,6 @@
 package authify.io;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,5 +14,6 @@ public class ProfileResponse {
     private String userId;
     private String name;
     private String email;
-    private boolean isAccountVerified;
+    @JsonProperty("isAccountVerified") // forcing explicitly 
+    private boolean isAccountVerified; //jackson serializes it as accountVerified - treating it as a property
 }
