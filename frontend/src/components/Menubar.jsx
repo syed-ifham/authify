@@ -3,16 +3,18 @@ import {useNavigate} from "react-router-dom";
 import {ArrowRight, LogOut, MailCheck} from "lucide-react";
 import {useContext, useEffect, useRef, useState} from "react";
 import {AppContext} from "../context/AppContext.jsx";
+import axios from "axios";
+import {toast} from "react-toastify";
+import BrandLogoName from "./BrandLogoName.jsx";
 
 export default function Menubar() {
   const navigate = useNavigate();
-  const {userData, setUserData} = useContext(AppContext);
+  const {userData, setUserData, backendURL, setIsLoggedIn} = useContext(AppContext);
   const [dropDownOpen, setDropDownOpen] = useState(false);
   const dropDownRef = useRef(null);
 
   const userNameFirstLetter = userData?.name?.[0]?.toUpperCase() || 'X';
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
@@ -24,28 +26,47 @@ export default function Menubar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
-    setDropDownOpen(false);
-    if (setUserData) setUserData(null)
-    navigate("/login")
+  const handleLogout = async () => {
+
+    try {
+      axios.defaults.withCredentials = true;
+      const response = await axios.post(`${backendURL}/logout`);
+      if (response.status === 200 || response.status === 201) {
+        toast.success("Logged out successfully.");
+      }
+    } catch (err) {
+      toast.error(err.response.data.message);
+    } finally {
+      setIsLoggedIn(false);
+      setDropDownOpen(false);
+      if (setUserData) setUserData(null)
+      navigate("/")
+    }
+
   }
 
-  const handleVerifyEmail = () => {
-    setDropDownOpen(false);
-    navigate("/email-verify");
+  const sendVerificationOtp = async () => {
+    try {
+      axios.defaults.withCredentials = true;
+      const response = await axios.post(`${backendURL}/send-otp`);
+      if (response.status === 200 || response.status === 201) {
+        navigate("/email-verify");
+        toast.success("Verification successfully");
+      } else {
+        toast.error("Unable to send OTP!");
+      }
+    } catch (error) {
+      toast.error("Failed to verify OTP. Please try again");
+    } finally {
+      setDropDownOpen(false);
+    }
   }
 
   return (
     <nav
       className="w-full flex items-center justify-between px-6 md:px-8 py-3.5 border-b border-slate-200 bg-white shadow-xs top-0 z-40">
 
-      {/*BRAND LOGO AND NAME*/}
-      <div className="flex items-center gap-3 cursor-pointer select-none"
-           onClick={() => navigate("/")}
-      >
-        <img src="/icon.png" alt="authify_icon" className="h-8 w-8 object-contain"/>
-        <span className="font-jakarta text-slate-900 font-bold text-2xl tracking-tight">Authify</span>
-      </div>
+      <BrandLogoName/>
 
       {
         userData ? (
@@ -77,18 +98,18 @@ export default function Menubar() {
 
                 {
                   !userData.isAccountVerified && (
-                      <button
-                      onClick={handleVerifyEmail}
+                    <button
+                      onClick={sendVerificationOtp}
                       className="w-full flex items-center gap-2.5 px-4 py-2 text-sm font-medium text-amber-700 hover:bg-amber-50 transition-colors text-left"
-                      >
-                        <MailCheck size={16} className="text-amber-600"/>
-                        <span>Verify Email</span>
-                      </button>
+                    >
+                      <MailCheck size={16} className="text-amber-600"/>
+                      <span>Verify Email</span>
+                    </button>
                   )}
 
                 <button
-                onClick={handleLogout}
-                className="w-full flex items-center gap-2.5 px-4 py-2 text-sm font-medium text-rose-600 hover:bg-rose-50 transition-colors text-left
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2.5 px-4 py-2 text-sm font-medium text-rose-600 hover:bg-rose-50 transition-colors text-left
                 "
                 >
                   <LogOut size={16} className="text-rose-500"/>
@@ -102,11 +123,11 @@ export default function Menubar() {
 
           <div className="flex items-center">
             <Button
-                    variant="default"
-                    size="md"
-                    className="bg-fuchsia-600 text-white hover:bg-fuchsia-700 active:bg-fuchsia-800 transition-all flex items-center gap-2 px-4 py-2 roundede-lg shadow-sm cursor-pointer"
-                    onClick={() => navigate("/login")
-                    }
+              variant="default"
+              size="md"
+              className="bg-fuchsia-600 text-white hover:bg-fuchsia-700 active:bg-fuchsia-800 transition-all flex items-center gap-2 px-4 py-2 roundede-lg shadow-sm cursor-pointer"
+              onClick={() => navigate("/login")
+              }
             >
               <span> Login </span>
               <ArrowRight size={16}/>

@@ -4,6 +4,7 @@ import {useContext, useState} from "react";
 import axios from "axios";
 import {AppContext} from "../context/AppContext.jsx";
 import {toast} from "react-toastify";
+import BrandLogoName from "../components/BrandLogoName.jsx";
 
 export default function Login() {
 
@@ -56,12 +57,7 @@ export default function Login() {
     <div className="relative flex flex-col justify-center items-center min-h-screen bg-indigo-600">
 
       <div className="absolute top-6 left-6">
-        {/*Top left*/}
-        <Link to="/" className="flex gap-2.5  items-center group">
-          <img src="/icon-black.png" alt="authify icon"
-               className="group-hover:scale-110 transition h-8 w-8 object-contain filter brightness-0 invert"/>
-          <span className="font-jakarta text-white font-bold text-2xl tracking-tight">Authify</span>
-        </Link>
+        <BrandLogoName className="filter brightness-0 invert"/>
       </div>
 
       {/*CENTER*/}
@@ -127,6 +123,7 @@ export default function Login() {
             !isCreatedAccount && (
               <div className="text-right">
                 <Link to="/reset-password"
+                      onClick={()=>console.log("clicked reset")}
                       className="text-sm underline font-semibold text-indigo-600 hover:text-indigo-700 transition">
                   Forget password?
                 </Link>

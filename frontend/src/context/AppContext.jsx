@@ -9,32 +9,38 @@ axios.defaults.withCredentials = true;
 export const AppContext = createContext();
 
 export const AppContextProvider = (props) => {
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userData, setUserData] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   const getUserData = async () => {
     try {
       const response = await axios.get(`${backendURL}/profile`);
-      if (response.status === 200 || response.status === 201 || response.data?.success) {
-        setUserData(response.data?.userData || response.data?.user || response.data);
-      } else {
-        toast.error(response.data?.message || "Unable to get profile data.");
+      if (response.status === 200 || response.data?.success) {
+        const user = response.data?.userData || response.data?.user || response.data;
+        setUserData(user);
+        return user;
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || error.message || "Something went wrong.");
+      // Avoid showing error toast if it's a simple 401 unauthenticated response
+      if (error.response?.status !== 401) {
+        toast.error(error.response?.data?.message || "Failed to fetch user profile.");
+      }
     }
   };
 
   const getAuthState = async () => {
     try {
       const response = await axios.get(`${backendURL}/is-authenticated`);
-      if (response.status === 200 || response.data?.success) {
+      if (response.status === 200 || response.data === true) {
         setIsLoggedIn(true);
-        getUserData();
+        await getUserData();
+      } else {
+        setIsLoggedIn(false);
+        setUserData(null);
       }
     } catch {
-      // not logged in / session expired
+      setIsLoggedIn(false);
+      setUserData(null);
     }
   };
 
@@ -44,9 +50,12 @@ export const AppContextProvider = (props) => {
 
   const contextValue = {
     backendURL,
-    isLoggedIn, setIsLoggedIn,
-    userData, setUserData,
-    getUserData
+    isLoggedIn,
+    setIsLoggedIn,
+    userData,
+    setUserData,
+    getUserData,
+    getAuthState,
   };
 
   return (
@@ -54,5 +63,4 @@ export const AppContextProvider = (props) => {
       {props.children}
     </AppContext.Provider>
   );
-
 };
